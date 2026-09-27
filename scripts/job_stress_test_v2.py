@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 #     input/job_stress_test/*.json
 #
 # Scheduler:
-#     test2Parallize.py
+#     solver.py
 #
 # Scheduler output:
 #     output/job_stress_test/
@@ -32,7 +32,7 @@ import matplotlib.pyplot as plt
 INPUT_DIR = Path("input/job_stress_test_4")
 OUTPUT_DIR = Path("output/job_stress_test_4")
 
-DEFAULT_SCHEDULER = "test2Parallize.py"
+DEFAULT_SCHEDULER = "solver.py"
 
 
 # ============================================================
@@ -451,7 +451,7 @@ def main():
         default=DEFAULT_SCHEDULER,
         help=(
             "Scheduler script to execute. "
-            "Default: test2Parallize.py"
+            "Default: solver.py"
         )
     )
 

@@ -42,7 +42,7 @@ TEST2_INPUT_DIR = TEST2_DIR / "input"
 TEST2_OUTPUT_DIR = TEST2_DIR / "output"
 
 TEST_SCRIPT = PROJECT_ROOT / "test.py"
-TEST2_SCRIPT = PROJECT_ROOT / "test2Parallize.py"
+TEST2_SCRIPT = PROJECT_ROOT / "solver.py"
 
 
 # ============================================================
@@ -350,7 +350,7 @@ def plot_comparison(rows, output_file, title, y_label, value_key, second_value_k
 
     figure, axis = plt.subplots(figsize=(11, 6))
     axis.plot(labels, test_values, marker="o", linewidth=2, label="test.py", color="tab:blue")
-    axis.plot(labels, test2_values, marker="o", linewidth=2, label="test2Parallize.py", color="tab:orange")
+    axis.plot(labels, test2_values, marker="o", linewidth=2, label="solver.py", color="tab:orange")
 
     axis.set_title(title)
     axis.set_xlabel("Jobs_Messages")

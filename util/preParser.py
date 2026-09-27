@@ -21,91 +21,8 @@ def load_json(input_file):
         return json.load(f)
 
 
-# ------------------------------------------------------------
-# Rename nodes AND create old_id -> new_id mapping
-# ------------------------------------------------------------
-
-def rename_nodes(platform):
-    """
-    Rename all platform nodes sequentially starting from 1.
-
-    Also creates a mapping:
-
-        old node ID -> new node ID
-
-    Example:
-
-        P1001 -> 1
-        P1002 -> 2
-        R101  -> 95
-        ...
-
-    Returns:
-        old_to_new
-    """
-
-    old_to_new = {}
-
-    for new_id, node in enumerate(platform["nodes"], start=1):
-
-        old_id = node["id"]
-
-        old_to_new[old_id] = new_id
-
-        node["id"] = new_id
-
-    return old_to_new
 
 
-# ------------------------------------------------------------
-# Update links
-# ------------------------------------------------------------
-
-def update_links(platform, old_to_new):
-    """
-    Update every link's start and end node IDs.
-
-    Old:
-
-        {
-            "start": "P1001",
-            "end": "R101"
-        }
-
-    New:
-
-        {
-            "start": 1,
-            "end": 95
-        }
-    """
-
-    if "links" not in platform:
-        return
-
-    for link in platform["links"]:
-
-        if "start" in link:
-            old_start = link["start"]
-
-            if old_start not in old_to_new:
-                raise ValueError(
-                    f"Link start node '{old_start}' "
-                    f"does not exist in node mapping."
-                )
-
-            link["start"] = old_to_new[old_start]
-
-        if "end" in link:
-            old_end = link["end"]
-
-            if old_end not in old_to_new:
-                raise ValueError(
-                    f"Link end node '{old_end}' "
-                    f"does not exist in node mapping."
-                )
-
-            link["end"] = old_to_new[old_end]
 
 
 # ------------------------------------------------------------
@@ -187,65 +104,43 @@ def add_speed_factors(platform, node_speed_factors):
             node.pop("speed_factor", None)
 
 
-# ------------------------------------------------------------
-# Calculate processing times
-# ------------------------------------------------------------
-
-def processing_times_for_job(
-    wcet,
-    allowed_nodes,
-    node_speed_factors
-):
-    """
-    processing_time =
-        ceil(wcet_fullspeed * speed_factor)
-    """
-
-    return [
-        math.ceil(
-            wcet * node_speed_factors[node_id]
-        )
-        for node_id in allowed_nodes
-    ]
-
 
 # ------------------------------------------------------------
-# Assign nodes + processing times to jobs
+# Ensure minimum compute nodes + update processing times
 # ------------------------------------------------------------
 
 def assign_compute_nodes_to_jobs(
     application,
     compute_node_ids,
     node_speed_factors,
-    nodes_per_job
+    min_nodes_per_job
 ):
-
-    if nodes_per_job > len(compute_node_ids):
-
+    if min_nodes_per_job > len(compute_node_ids):
         raise ValueError(
-            f"Requested {nodes_per_job} compute nodes per job, "
+            f"Requested a minimum of {min_nodes_per_job} compute nodes per job, "
             f"but only {len(compute_node_ids)} compute nodes exist."
         )
 
     for job in application["jobs"]:
+        # Preserve the number of eligible nodes, but replace stale or numeric
+        # references with IDs from the current platform.
+        existing_count = len(job.get("can_run_on", []))
 
-        # Randomly select compute nodes
-        allowed_nodes = random.sample(
-            compute_node_ids,
-            nodes_per_job
-        )
+        if existing_count < min_nodes_per_job:
+            needed_count = min_nodes_per_job - existing_count
+            target_count = existing_count + needed_count
+        else:
+            target_count = existing_count
 
-        # Store node IDs
-        job["can_run_on"] = allowed_nodes
-
-        # Calculate processing times
-        job["processing_times"] = (
-            processing_times_for_job(
-                wcet=job["wcet_fullspeed"],
-                allowed_nodes=allowed_nodes,
-                node_speed_factors=node_speed_factors
+        if target_count > len(compute_node_ids):
+            raise ValueError(
+                f"Job {job['id']} requires {target_count} compute nodes, but "
+                f"only {len(compute_node_ids)} are available."
             )
-        )
+
+        # random.sample returns distinct IDs from the platform, so this field
+        # always has the platform's node-ID type (for example, strings).
+        job["can_run_on"] = random.sample(compute_node_ids, target_count)
 
 
 # ------------------------------------------------------------
@@ -267,21 +162,6 @@ def process_file(
     platform = data["platform"]
     application = data["application"]
 
-    # --------------------------------------------------------
-    # 1. Rename nodes
-    # --------------------------------------------------------
-
-    old_to_new = rename_nodes(platform)
-
-    # --------------------------------------------------------
-    # 2. IMPORTANT:
-    #    Update link start/end IDs
-    # --------------------------------------------------------
-
-    update_links(
-        platform,
-        old_to_new
-    )
 
     # --------------------------------------------------------
     # 3. Get compute/router nodes

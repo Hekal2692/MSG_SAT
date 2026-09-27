@@ -325,7 +325,7 @@ def plot_results(results, label):
 
 def main():
     parser = argparse.ArgumentParser(description="Generate and run scheduler job stress tests.")
-    parser.add_argument("--scheduler", default="test2Parallize.py", help="Scheduler script to benchmark.")
+    parser.add_argument("--scheduler", default="solver.py", help="Scheduler script to benchmark.")
     parser.add_argument("--label", default="baseline", help="Suffix for result files.")
     parser.add_argument("--start", type=int, default=None)
     parser.add_argument("--stop", type=int, default=None)

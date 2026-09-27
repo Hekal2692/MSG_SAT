@@ -146,13 +146,12 @@ def speed_factors_by_node():
     }
 
 
-def add_speed_factors(platform):
+def add_speed_factors(platform, node_speed_factors):
     """
     Add speed_factor to every non-router node.
     Routers do not get a speed_factor.
     """
     platform_copy = json.loads(json.dumps(platform))
-    node_speed_factors = speed_factors_by_node()
 
     for node in platform_copy["nodes"]:
         if not node["is_router"]:
@@ -362,7 +361,7 @@ def allowed_nodes_for_job(job_id):
 # Processing times
 # ─────────────────────────────────────────────────────────────────────────────
 
-def processing_times_for_job(wcet, allowed_nodes):
+def processing_times_for_job(wcet, allowed_nodes, node_speed_factors):
     """
     processing_time = ceil(
         wcet_fullspeed * node_speed_factor
@@ -378,8 +377,6 @@ def processing_times_for_job(wcet, allowed_nodes):
 
     Therefore every processing time is an integer.
     """
-
-    node_speed_factors = speed_factors_by_node()
 
     return [
         math.ceil(
@@ -497,6 +494,10 @@ def generate_json_for_graph(
         for job_id, task_name in enumerate(selected_tasks)
     }
 
+    # A physical node has one speed for the entire generated input. Reuse this
+    # mapping for both job durations and the serialized platform definition.
+    node_speed_factors = speed_factors_by_node()
+
     # ── Generate jobs ────────────────────────────────────────────────────────
 
     jobs = []
@@ -521,7 +522,8 @@ def generate_json_for_graph(
 
         processing_times = processing_times_for_job(
             wcet,
-            allowed_nodes
+            allowed_nodes,
+            node_speed_factors
         )
 
         jobs.append(
@@ -588,7 +590,7 @@ def generate_json_for_graph(
             "deadline": deadline
         },
 
-        "platform": add_speed_factors(PLATFORM),
+        "platform": add_speed_factors(PLATFORM, node_speed_factors),
 
         "frequencies": FREQUENCIES,
 

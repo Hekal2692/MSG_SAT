@@ -13,7 +13,7 @@ BASE_INPUT_FILE = ROOT_DIR / "newInputFiles" /  "100Tasks.json"
 EVENT_INPUT_DIR = ROOT_DIR / "context" / "inputFiles"
 EVENT_SCHEDULE_DIR = ROOT_DIR / "context" / "contextSchedules"
 SCHEDULER_LOG_DIR = ROOT_DIR / "context" / "schedulerLogs"
-SCHEDULER_FILE = ROOT_DIR / "test2Parallize.py"
+SCHEDULER_FILE = ROOT_DIR / "solver.py"
 
 
 def load_json(path):
