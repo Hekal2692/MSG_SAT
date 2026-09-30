@@ -1,0 +1,40 @@
+{
+  "test": "Test3_job_stress_test3",
+  "description": "Job stress test 3",
+  "source_output_directory": "output/job_stress_test3",
+  "verified_pair_count": 1,
+  "output_count": 1,
+  "unmatched_outputs": [],
+  "input_only_files": [],
+  "source_trial_summaries": [
+    "output/job_stress_test3/stress_results.json",
+    "output/job_stress_test3/stress_results.csv"
+  ],
+  "matching_policy": "Basename plus embedded job/message counts, output schedule size, and assigned-node membership in the input platform. Ambiguous metadata-compatible inputs use the preferred source directory order documented in build_evaluation.py.",
+  "trials": [
+    {
+      "trial": "250_230",
+      "input_file": "250_230.json",
+      "input_source": "input/prevInputFiles/250_230.json",
+      "output_file": "250_230_smt_output.json",
+      "output_source": "output/job_stress_test3/250_230_smt_output.json",
+      "matched": true,
+      "match_check": "task, message, schedule-size, and platform-node checks passed",
+      "tasks": 250,
+      "messages": 230,
+      "platform_nodes": 53,
+      "platform_links": 140,
+      "platform_routers": 28,
+      "platform_processors": 25,
+      "platform_speed_factors": "[1, 1.5, 2]",
+      "frequencies": "[500, 1000]",
+      "makespan": 9746,
+      "scheduler_seconds": 23975.478991,
+      "sat": null,
+      "run_status": null,
+      "run_elapsed_seconds": null,
+      "workers": null,
+      "run_reported_seconds": null
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+trial,matched,input_file,input_source,output_file,output_source,match_check,tasks,messages,platform_nodes,platform_processors,platform_routers,platform_links,platform_speed_factors,frequencies,makespan,scheduler_seconds,sat,run_status,run_elapsed_seconds,workers,run_reported_seconds
+100Tasks,True,100Tasks.json,input/job_stress_test_4/100Tasks.json,100TasksLog.json,output/job_stress_test_4/100TasksLog.json,"task, message, schedule-size, and platform-node checks passed; selected preferred source among 2 metadata-compatible copies",100,212,195,94,101,574,"[1, 1.5, 2]",[],739,3580.728274,True,,,,
+150_120,False,,,150_120LogOutput.json,output/job_stress_test_4/150_120LogOutput.json,no input with matching basename,150,,,,,,,,742,4046.849884,True,,,,
+150_130,False,,,150_130LogOutput.json,output/job_stress_test_4/150_130LogOutput.json,no input with matching basename,150,,,,,,,,575,28924.210631,True,,,,
+40Tasks,False,,,40TasksLog.json,output/job_stress_test_4/40TasksLog.json,no input with matching basename,40,,,,,,,,561,71.488192,True,,,,
+40Tasks,False,,,40TasksLogOutput.json,output/job_stress_test_4/40TasksLogOutput.json,no input with matching basename,40,,,,,,,,561,78.761946,True,,,,

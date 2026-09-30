@@ -1,0 +1,2 @@
+trial,matched,input_file,input_source,output_file,output_source,match_check,tasks,messages,platform_nodes,platform_processors,platform_routers,platform_links,platform_speed_factors,frequencies,makespan,scheduler_seconds,sat,run_status,run_elapsed_seconds,workers,run_reported_seconds
+250_230,True,250_230.json,input/prevInputFiles/250_230.json,250_230_smt_output.json,output/job_stress_test3/250_230_smt_output.json,"task, message, schedule-size, and platform-node checks passed",250,230,53,25,28,140,"[1, 1.5, 2]","[500, 1000]",9746,23975.478991,,,,,
